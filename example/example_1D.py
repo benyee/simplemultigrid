@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,'..')
+
 from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid
 import numpy as np
 nx = 2**8+1
