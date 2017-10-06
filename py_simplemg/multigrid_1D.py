@@ -1,14 +1,17 @@
 """This module defines the classes and functions needed to build a 1D multigrid
-solver.  A brief example of how to use it is provided at the bottom of the
-module.
-"""
+solver."""
+
 import numpy as np
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
-  def __init__(self, num_its=10, num_levels=4):
+  def __init__(self, num_its=10, num_levels=4, cycle='W'):
     self.num_its = num_its
     self.num_levels = num_levels
+    if cycle in ['W', 'V']:
+      self.cycle = cycle
+    else:
+      raise ValueError("MultigridOptions cycle must be either V or W")
 
 class SmootherOptions(object):
   """ A structure to store smoother options. """
@@ -72,7 +75,7 @@ class MultigridLevel(object):
         grid."""
     return np.dot(self.interpmat, x)
 
-  def iterate(self, x, b, smooth_opts):
+  def iterate(self, x, b, smooth_opts, mg_opts):
     """ Performs one multigrid "cycle" (e.g., a V-cycle or a W-cycle). """
     if self.level == 0:
       return np.linalg.solve(self.A, b)
@@ -80,13 +83,14 @@ class MultigridLevel(object):
       x = self.smooth(x, b, smooth_opts.redblack)
     r = self.restrict(b-np.dot(self.A, x))
     xc = np.zeros(len(r))
-    x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
-    #W-cycle:
-    for i in range(smooth_opts.smoothdown):
-      x = self.smooth(x, b, smooth_opts.redblack)
-    r = self.restrict(b-np.dot(self.A, x))
-    xc = np.zeros(len(r))
-    x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
+    x = x+self.interp(self.child.iterate(xc, r, smooth_opts, mg_opts))
+    #begin W-cycle
+    if mg_opts.cycle == 'W':
+      for i in range(smooth_opts.smoothdown):
+        x = self.smooth(x, b, smooth_opts.redblack)
+      r = self.restrict(b-np.dot(self.A, x))
+      xc = np.zeros(len(r))
+      x = x+self.interp(self.child.iterate(xc, r, smooth_opts, mg_opts))
     #end W-cycle
     for i in range(smooth_opts.smoothup):
       x = self.smooth(x, b, smooth_opts.redblack)
@@ -122,6 +126,6 @@ def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
   mymgsolver = MultigridLevel(mg_opts.num_levels-1, A)
 
   for iteration in range(mg_opts.num_its):
-    x = mymgsolver.iterate(x, b, smooth_opts)
+    x = mymgsolver.iterate(x, b, smooth_opts, mg_opts)
 
   return x
