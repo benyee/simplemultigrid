@@ -4,6 +4,8 @@ Future work will include converting this into a class.
 
 import numpy as np
 
+max_dims = 5
+
 class MultigridLevel_Base(object):
   """ Each instance represents a level of the multigrid solver.
 
@@ -66,14 +68,22 @@ class MultigridLevel_Base(object):
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
-  def __init__(self, num_its=10, num_levels=4, cycle='W', dim=1):
+  def __init__(self, num_its=10, num_levels=4, cycle='W', geom_type='1D'):
+    """ Inputs:
+
+    num_its -- number of iterations (V/W cycles)
+    num_levels -- number of multigrid grids
+    cycle -- type of cycle (V vs. W)
+    geom_type -- Type of geometry for the multigrid grids.  Currently only 1D
+                 is available.
+    """
     self.num_its = num_its
     self.num_levels = num_levels
     if cycle in ['W', 'V']:
       self.cycle = cycle
     else:
       raise ValueError("MultigridOptions cycle must be either V or W")
-    if dim == 1:
-      self.dim = dim
+    if geom_type in ['1D',]:
+      self.geom_type = geom_type
     else:
-      raise ValueError("Only 1D supported right now.")
+      raise ValueError("Only 1D supported so far!")
