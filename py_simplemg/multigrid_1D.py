@@ -1,6 +1,7 @@
 """This module defines the multigrid level class for 1D problems."""
 
 import numpy as np
+import scipy.sparse as sp
 from .multigrid_base import MultigridLevel_Base
 from .smoothers import blk_jacobi
 
@@ -23,10 +24,13 @@ class MultigridLevel_1D(MultigridLevel_Base):
       else:
         self.interpmat[i, i_coarse] = 0.5
         self.interpmat[i, i_coarse+1] = 0.5
+    if self.mg_opts.sparse:
+      self.interpmat = sp.csr_matrix(self.interpmat)
+
     self.has_interp = True
 
   def smooth(self, x, b, redblack=True):
     """ Performs a smoothing step. Right now, it is just RB block Jacobi."""
     print("smoothing at level", self.level)
-    x = blk_jacobi(self.A, x, b, redblack)
+    x = blk_jacobi(self.A, x, b, redblack, self.mg_opts.sparse)
     return x
