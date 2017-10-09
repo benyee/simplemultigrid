@@ -3,7 +3,8 @@ Future work will include converting this into a class.
 """
 
 import numpy as np
-
+import scipy.sparse as sp
+import time
 max_dims = 5
 
 class MultigridLevel_Base(object):
@@ -16,10 +17,15 @@ class MultigridLevel_Base(object):
   """
   def __init__(self, level, A, mg_opts, parent=None):
     self.level = level
-    self.A = A
     self.mg_opts = mg_opts
     self.parent = parent
     self.has_interp = False
+
+    if self.mg_opts.sparse:
+      self.A = sp.csr_matrix(A)
+    else:
+      self.A = A
+
     if level:
       self.generate_interp()
       self.child = self.generate_coarser_level()
@@ -31,36 +37,43 @@ class MultigridLevel_Base(object):
         It uses a Galerkin triple product with restriction = interpolation^T to
         generate the coarse grid operator Ac.
         A pointer to the coarser level is returned."""
-    Ac = np.dot(np.transpose(self.interpmat), np.dot(self.A, self.interpmat))
+    Ac = self.interpmat.transpose().dot(self.A.dot(self.interpmat))
     return type(self)(self.level-1, Ac, self.mg_opts, self)
 
   def restrict(self, x):
     """ Restricts a vector x onto the child (coarser) grid."""
     if self.has_interp:
-      return np.dot(np.transpose(self.interpmat), x)
+      return self.interpmat.transpose().dot(x)
     raise AttributeError("Interpolation operator not defined yet.")
 
   def interp(self, x):
     """ Interpolates a vector x from the child (coarser) grid to the current
         grid."""
     if self.has_interp:
-      return np.dot(self.interpmat, x)
+      return self.interpmat.dot(x)
     raise AttributeError("Interpolation operator not defined yet.")
+
+  def residual(self, x, b):
+    """ Computes the residual b - Ax """
+    return b - self.A.dot(x)
 
   def iterate(self, x, b, smooth_opts):
     """ Performs one multigrid "cycle" (e.g., a V-cycle or a W-cycle). """
     if self.level == 0:
-      return np.linalg.solve(self.A, b)
+      if self.mg_opts.sparse:
+        return np.linalg.solve(self.A.toarray(), b)
+      else:
+        return np.linalg.solve(self.A, b)
     for i in range(smooth_opts.smoothdown):
       x = self.smooth(x, b, smooth_opts.redblack)
-    r = self.restrict(b-np.dot(self.A, x))
+    r = self.restrict(self.residual(x, b))
     xc = np.zeros(len(r))
     x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
     #begin W-cycle
     if self.mg_opts.cycle == 'W':
       for i in range(smooth_opts.smoothdown):
         x = self.smooth(x, b, smooth_opts.redblack)
-      r = self.restrict(b-np.dot(self.A, x))
+      r = self.restrict(self.residual(x, b))
       xc = np.zeros(len(r))
       x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
     #end W-cycle
@@ -83,7 +96,7 @@ class MultigridLevel_Base(object):
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
-  def __init__(self, num_its=10, num_levels=4, cycle='W', geom_type='1D'):
+  def __init__(self, num_its=10, num_levels=4, cycle='W', geom_type='1D', sparse=False):
     """ Inputs:
 
     num_its -- number of iterations (V/W cycles)
@@ -94,6 +107,7 @@ class MultigridOptions(object):
     """
     self.num_its = num_its
     self.num_levels = num_levels
+    self.sparse = sparse
     if cycle in ['W', 'V']:
       self.cycle = cycle
     else:
