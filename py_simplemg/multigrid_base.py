@@ -47,6 +47,27 @@ class MultigridLevel_Base(object):
       return np.dot(self.interpmat, x)
     raise AttributeError("Interpolation operator not defined yet.")
 
+  def iterate(self, x, b, smooth_opts):
+    """ Performs one multigrid "cycle" (e.g., a V-cycle or a W-cycle). """
+    if self.level == 0:
+      return np.linalg.solve(self.A, b)
+    for i in range(smooth_opts.smoothdown):
+      x = self.smooth(x, b, smooth_opts.redblack)
+    r = self.restrict(b-np.dot(self.A, x))
+    xc = np.zeros(len(r))
+    x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
+    #begin W-cycle
+    if self.mg_opts.cycle == 'W':
+      for i in range(smooth_opts.smoothdown):
+        x = self.smooth(x, b, smooth_opts.redblack)
+      r = self.restrict(b-np.dot(self.A, x))
+      xc = np.zeros(len(r))
+      x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
+    #end W-cycle
+    for i in range(smooth_opts.smoothup):
+      x = self.smooth(x, b, smooth_opts.redblack)
+    return x
+
   #Begin "abstract" methods:
   def generate_interp(self):
     """ Dummy method to define the interpolation from level-1 to level."""
@@ -56,12 +77,6 @@ class MultigridLevel_Base(object):
   def smooth(self, x, b, redblack=True):
     """ Dummy smooth method for the base class."""
     raise NotImplementedError("smooth method not defined for " + \
-                              "base abstract multigrid level class!")
-    return x
-
-  def iterate(self, x, b, smooth_opts):
-    """ Dummy iterate method for the base class."""
-    raise NotImplementedError("iterate method not defined for " + \
                               "base abstract multigrid level class!")
     return x
   #End "abstract" methods

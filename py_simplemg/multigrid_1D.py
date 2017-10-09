@@ -30,25 +30,3 @@ class MultigridLevel_1D(MultigridLevel_Base):
     print("smoothing at level", self.level)
     x = blk_jacobi(self.A, x, b, redblack)
     return x
-
-  def iterate(self, x, b, smooth_opts):
-    """ Performs one multigrid "cycle" (e.g., a V-cycle or a W-cycle). """
-    if self.level == 0:
-      return np.linalg.solve(self.A, b)
-    for i in range(smooth_opts.smoothdown):
-      x = self.smooth(x, b, smooth_opts.redblack)
-    r = self.restrict(b-np.dot(self.A, x))
-    xc = np.zeros(len(r))
-    x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
-    #begin W-cycle
-    if self.mg_opts.cycle == 'W':
-      for i in range(smooth_opts.smoothdown):
-        x = self.smooth(x, b, smooth_opts.redblack)
-      r = self.restrict(b-np.dot(self.A, x))
-      xc = np.zeros(len(r))
-      x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
-    #end W-cycle
-    for i in range(smooth_opts.smoothup):
-      x = self.smooth(x, b, smooth_opts.redblack)
-    return x
-
