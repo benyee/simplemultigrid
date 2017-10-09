@@ -2,6 +2,7 @@
 solver."""
 
 import numpy as np
+from .smoothers import blk_jacobi
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
@@ -95,29 +96,6 @@ class MultigridLevel(object):
     for i in range(smooth_opts.smoothup):
       x = self.smooth(x, b, smooth_opts.redblack)
     return x
-
-
-def blk_jacobi(A, x, b, redblack=True):
-  """ Performs one block Jacobi iteration.  Red-black ordering can be toggled
-      on/off. """
-  tmpdiag = np.diag(A)
-  tmpdiag = 1./tmpdiag
-  if redblack:
-    tmpdiag[1::2] = 0.
-  tmpdiag = np.diag(tmpdiag)
-
-  x = x+np.dot(tmpdiag, b-np.dot(A, x))
-  if not redblack:
-    return x
-
-  tmpdiag2 = np.diag(A)
-  tmpdiag2 = 1./tmpdiag2
-  tmpdiag2[0::2] = 0.
-  tmpdiag2 = np.diag(tmpdiag2)
-
-  x = x+np.dot(tmpdiag, b-np.dot(A, x))
-
-  return x
 
 def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
   """ Wrapper function to solve a linear system using multigrid."""
