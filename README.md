@@ -17,4 +17,3 @@ Some potential to-do's:
 * Create a multi-equation version (i.e., multiple unknowns per spatial node)
 * Make it easier to define custom restriction/interpolation operators
 * More complex boundary conditions
-* Use sparse matrices for the interpolation operators and problem operators.
