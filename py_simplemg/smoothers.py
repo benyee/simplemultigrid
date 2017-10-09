@@ -1,6 +1,13 @@
 
 import numpy as np
 
+class SmootherOptions(object):
+  """ A structure to store smoother options. """
+  def __init__(self, smoothdown=1, smoothup=1, redblack=True):
+    self.smoothdown = smoothdown
+    self.smoothup = smoothup
+    self.redblack = redblack
+
 def blk_jacobi(A, x, b, redblack=True):
   """ Performs one block Jacobi iteration.  Red-black ordering can be toggled
       on/off. """

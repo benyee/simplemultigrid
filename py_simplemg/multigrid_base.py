@@ -77,10 +77,3 @@ class MultigridOptions(object):
       self.dim = dim
     else:
       raise ValueError("Only 1D supported right now.")
-
-class SmootherOptions(object):
-  """ A structure to store smoother options. """
-  def __init__(self, smoothdown=1, smoothup=1, redblack=True):
-    self.smoothdown = smoothdown
-    self.smoothup = smoothup
-    self.redblack = redblack
