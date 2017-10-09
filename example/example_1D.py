@@ -1,5 +1,7 @@
+""" Sample 1D homogeneous problem with zero boundary conditions. """
+
 import sys
-sys.path.insert(0,'..')
+sys.path.insert(0, '..')
 
 from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid
 import numpy as np

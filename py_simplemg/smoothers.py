@@ -1,3 +1,4 @@
+"""This module houses all of the functionality for multigrid smoothers."""
 
 import numpy as np
 
