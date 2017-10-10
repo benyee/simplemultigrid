@@ -20,7 +20,7 @@ def blk_jacobi(A, x, b, redblack=True, sparse=False):
     tmpdiag = np.diag(A)
   tmpdiag = 1./tmpdiag
   if redblack:
-    tmpdiag[1::2] = 0.
+    tmpdiag[0::2] = 0.
 
   if sparse:
     tmpdiag = sp.diags(tmpdiag)
@@ -33,17 +33,16 @@ def blk_jacobi(A, x, b, redblack=True, sparse=False):
     return x
 
   if sparse:
-    tmpdiag2 = A.diagonal()
+    tmpdiag = A.diagonal()
   else:
-    tmpdiag2 = np.diag(A)
-  tmpdiag2 = 1./tmpdiag2
-  tmpdiag2[0::2] = 0.
+    tmpdiag = np.diag(A)
+  tmpdiag = 1./tmpdiag
+  tmpdiag[1::2] = 0.
 
   if sparse:
-    tmpdiag2 = sp.diags(tmpdiag2)
+    tmpdiag = sp.diags(tmpdiag)
   else:
-    tmpdiag2 = np.diag(tmpdiag2)
+    tmpdiag = np.diag(tmpdiag)
 
-  x = x+tmpdiag2.dot(b - A.dot(x))
-
+  x = x+tmpdiag.dot(b - A.dot(x))
   return x
