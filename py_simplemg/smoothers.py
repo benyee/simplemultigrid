@@ -45,5 +45,4 @@ def blk_jacobi(A, x, b, redblack=True, sparse=False):
     tmpdiag = np.diag(tmpdiag)
 
   x = x+tmpdiag.dot(b - A.dot(x))
-
   return x
