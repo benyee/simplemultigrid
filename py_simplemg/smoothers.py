@@ -6,43 +6,38 @@ import scipy.sparse as sp
 class SmootherOptions(object):
   """ A structure to store smoother options. """
   def __init__(self, smoothdown=1, smoothup=1, omega = 1.0, sparse = True,
-               redblack=True):
+               num_color=True):
     self.smoothdown = smoothdown
-    self.smoothup = smoothup
-    self.redblack = redblack
-    self.omega    = omega
-    self.sparse   = sparse
+    self.smoothup   = smoothup
+    self.num_color  = num_color
+    self.omega      = omega
+    self.sparse     = sparse
 
 def blk_jacobi(A, x, b, smooth_opts):
-  """ Performs one block Jacobi iteration.  Red-black ordering can be toggled
-      on/off.  The "block" aspect has not been implemented yet, so it's
-      really just red/black Jacobi.
+  """ Performs one block Jacobi iteration.  Colored ordering can be toggled
+      on/off via smooth_opts.  The "block" aspect has not been implemented
+      yet, so it's really just red/black Jacobi.
   """
-  x0 = x
-  if smooth_opts.redblack:
-    num_color = 2
-  else:
-    num_color = 1
+  x0 = x[:]
 
-  #Iterate backwards over the number of colors:
-  color = num_color
-  while(color > 1):
+  if smooth_opts.sparse:
+    diag = A.diagonal()
+  else:
+    diag = np.diag(A)
+
+  color = smooth_opts.num_color
+  while color:
     color -= 1
 
-    if smooth_opts.sparse:
-      tmpdiag = A.diagonal()
-    else:
-      tmpdiag = np.diag(A)
-    tmpdiag = 1./tmpdiag
-
-    if smooth_opts.redblack:
-      tmpdiag[color::2] = 0.
+    diaginv = np.zeros(len(diag))
+    diaginv[color::smooth_opts.num_color] = \
+            1./diag[color::smooth_opts.num_color]
 
     if smooth_opts.sparse:
-      tmpdiag = sp.diags(tmpdiag)
+      diaginv = sp.diags(diaginv)
     else:
-      tmpdiag = np.diag(tmpdiag)
+      diaginv = np.diag(diaginv)
 
-    x = x+tmpdiag.dot(b - A.dot(x))
+    x += diaginv.dot(b - A.dot(x))
 
   return smooth_opts.omega*x + (1-smooth_opts.omega)*x0

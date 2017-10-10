@@ -97,17 +97,17 @@ class MultigridLevel_Base(object):
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
-  def __init__(self, num_its=10, num_levels=4, cycle='W', geom_type='1D', sparse=False):
+  def __init__(self, num_it=10, num_level=4, cycle='W', geom_type='1D', sparse=False):
     """ Inputs:
 
-    num_its -- number of iterations (V/W cycles)
-    num_levels -- number of multigrid grids
+    num_it -- number of iterations (V/W cycles)
+    num_level -- number of multigrid grids
     cycle -- type of cycle (V vs. W)
     geom_type -- Type of geometry for the multigrid grids.  Currently only 1D
                  is available.
     """
-    self.num_its = num_its
-    self.num_levels = num_levels
+    self.num_it = num_it
+    self.num_level = num_level
     self.sparse = sparse
     if cycle in ['W', 'V']:
       self.cycle = cycle

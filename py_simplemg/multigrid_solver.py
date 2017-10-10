@@ -19,16 +19,16 @@ def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
                replaced with a direct pointer to a smoother object or function
 
   Outputs:
-  x -- solution x after num_its iterations
+  x -- solution x after num_it iterations
   """
   x = x0
 
   if mg_opts.geom_type == '1D':
-    mymgsolver = MultigridLevel_1D(mg_opts.num_levels-1, A, mg_opts)
+    mymgsolver = MultigridLevel_1D(mg_opts.num_level-1, A, mg_opts)
   else:
     raise ValueError("No support currently for anything other than 1D.")
 
-  for iteration in range(mg_opts.num_its):
+  for iteration in range(mg_opts.num_it):
     x = mymgsolver.iterate(x, b, smooth_opts)
 
   return x
