@@ -66,20 +66,20 @@ class MultigridLevel_Base(object):
       else:
         return np.linalg.solve(self.A, b)
     for i in range(smooth_opts.smoothdown):
-      x = self.smooth(x, b, smooth_opts.redblack)
+      x = self.smooth(x, b, smooth_opts)
     r = self.restrict(self.residual(x, b))
     xc = np.zeros(len(r))
     x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
     #begin W-cycle
     if self.mg_opts.cycle == 'W':
       for i in range(smooth_opts.smoothdown):
-        x = self.smooth(x, b, smooth_opts.redblack)
+        x = self.smooth(x, b, smooth_opts)
       r = self.restrict(self.residual(x, b))
       xc = np.zeros(len(r))
       x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
     #end W-cycle
     for i in range(smooth_opts.smoothup):
-      x = self.smooth(x, b, smooth_opts.redblack)
+      x = self.smooth(x, b, smooth_opts)
     return x
 
   #Begin "abstract" methods:

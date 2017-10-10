@@ -5,44 +5,40 @@ import scipy.sparse as sp
 
 class SmootherOptions(object):
   """ A structure to store smoother options. """
-  def __init__(self, smoothdown=1, smoothup=1, redblack=True):
+  def __init__(self, smoothdown=1, smoothup=1, omega = 1.0, sparse = True,
+               redblack=True):
     self.smoothdown = smoothdown
     self.smoothup = smoothup
     self.redblack = redblack
+    self.omega    = omega
+    self.sparse   = sparse
 
-def blk_jacobi(A, x, b, redblack=True, sparse=False):
+def blk_jacobi(A, x, b, smooth_opts):
   """ Performs one block Jacobi iteration.  Red-black ordering can be toggled
       on/off. """
-
-  if sparse:
-    tmpdiag = A.diagonal()
+  x0 = x
+  if smooth_opts.redblack:
+    num_color = 2
   else:
-    tmpdiag = np.diag(A)
-  tmpdiag = 1./tmpdiag
-  if redblack:
-    tmpdiag[0::2] = 0.
+    num_color = 1
 
-  if sparse:
-    tmpdiag = sp.diags(tmpdiag)
-  else:
-    tmpdiag = np.diag(tmpdiag)
+  color = 0
+  while(color < num_color):
+    if smooth_opts.sparse:
+      tmpdiag = A.diagonal()
+    else:
+      tmpdiag = np.diag(A)
+    tmpdiag = 1./tmpdiag
 
-  x = x+tmpdiag.dot(b - A.dot(x))
+    if smooth_opts.redblack:
+      tmpdiag[color::2] = 0.
 
-  if not redblack:
-    return x
+    if smooth_opts.sparse:
+      tmpdiag = sp.diags(tmpdiag)
+    else:
+      tmpdiag = np.diag(tmpdiag)
 
-  if sparse:
-    tmpdiag = A.diagonal()
-  else:
-    tmpdiag = np.diag(A)
-  tmpdiag = 1./tmpdiag
-  tmpdiag[1::2] = 0.
+    x = x+tmpdiag.dot(b - A.dot(x))
 
-  if sparse:
-    tmpdiag = sp.diags(tmpdiag)
-  else:
-    tmpdiag = np.diag(tmpdiag)
-
-  x = x+tmpdiag.dot(b - A.dot(x))
-  return x
+    color = color + 1
+  return smooth_opts.omega*x + (1-smooth_opts.omega)*x0

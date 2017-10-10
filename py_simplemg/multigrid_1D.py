@@ -34,8 +34,8 @@ class MultigridLevel_1D(MultigridLevel_Base):
 
     self.has_interp = True
 
-  def smooth(self, x, b, redblack=True):
+  def smooth(self, x, b, smooth_opts):
     """ Performs a smoothing step. Right now, it is just RB block Jacobi."""
     print("smoothing at level", self.level)
-    x = blk_jacobi(self.A, x, b, redblack, self.mg_opts.sparse)
+    x = blk_jacobi(self.A, x, b, smooth_opts)
     return x

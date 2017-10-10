@@ -19,6 +19,14 @@ for i in range(nx):
 x = np.zeros(nx)
 x[0:nx//2] = 0.5
 
-my_mg_opts = MultigridOptions(num_its=1, num_levels=4, cycle='W', geom_type='1D', sparse=True)
-my_smooth_opts = SmootherOptions(smoothdown=1, smoothup=0, redblack=True)
+my_mg_opts = MultigridOptions(num_its=1, 
+                              num_levels=4, 
+                              cycle='W', 
+                              geom_type='1D', 
+                              sparse=True)
+my_smooth_opts = SmootherOptions(smoothdown=1, 
+                                 smoothup=0, 
+                                 omega=1.0, 
+                                 redblack=True, 
+                                 sparse=True)
 print(solve_multigrid(A, b, x, my_mg_opts, my_smooth_opts))
