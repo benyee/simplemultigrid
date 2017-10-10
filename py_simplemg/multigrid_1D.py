@@ -16,7 +16,12 @@ class MultigridLevel_1D(MultigridLevel_Base):
         Restriction is assumed by default to be interp^T."""
     nx_fine = self.A.shape[0]
     n_coarse = (nx_fine-1)//2+1
-    self.interpmat = np.zeros((nx_fine, n_coarse))
+    if self.mg_opts.sparse:
+      """ Create matrix using lil_matrix, then convert to more 
+          computationally efficient csr_matrix. """
+      self.interpmat = sp.lil_matrix((nx_fine, n_coarse))
+    else:
+      self.interpmat = np.zeros((nx_fine, n_coarse))
     for i in range(nx_fine):
       i_coarse = (i-1)//2
       if i%2:
