@@ -4,6 +4,7 @@ Future work will include converting this into a class.
 
 import numpy as np
 import scipy.sparse as sp
+from scipy.sparse.linalg import spsolve
 import time
 max_dims = 5
 
@@ -61,7 +62,7 @@ class MultigridLevel_Base(object):
     """ Performs one multigrid "cycle" (e.g., a V-cycle or a W-cycle). """
     if self.level == 0:
       if self.mg_opts.sparse:
-        return np.linalg.solve(self.A.toarray(), b)
+        return spsolve(self.A, b)
       else:
         return np.linalg.solve(self.A, b)
     for i in range(smooth_opts.smoothdown):
