@@ -8,10 +8,10 @@ class SmootherOptions(object):
   def __init__(self, smoothdown=1, smoothup=1, omega = 1.0, sparse = True,
                num_color=True):
     self.smoothdown = smoothdown
-    self.smoothup = smoothup
-    self.num_color = num_color
-    self.omega    = omega
-    self.sparse   = sparse
+    self.smoothup   = smoothup
+    self.num_color  = num_color
+    self.omega      = omega
+    self.sparse     = sparse
 
 def blk_jacobi(A, x, b, smooth_opts):
   """ Performs one block Jacobi iteration.  Colored ordering can be toggled
