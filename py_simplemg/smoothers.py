@@ -15,15 +15,20 @@ class SmootherOptions(object):
 
 def blk_jacobi(A, x, b, smooth_opts):
   """ Performs one block Jacobi iteration.  Red-black ordering can be toggled
-      on/off. """
+      on/off.  The "block" aspect has not been implemented yet, so it's
+      really just red/black Jacobi.
+  """
   x0 = x
   if smooth_opts.redblack:
     num_color = 2
   else:
     num_color = 1
 
-  color = 0
-  while(color < num_color):
+  #Iterate backwards over the number of colors:
+  color = num_color
+  while(color > 1):
+    color -= 1
+
     if smooth_opts.sparse:
       tmpdiag = A.diagonal()
     else:
@@ -40,5 +45,4 @@ def blk_jacobi(A, x, b, smooth_opts):
 
     x = x+tmpdiag.dot(b - A.dot(x))
 
-    color = color + 1
   return smooth_opts.omega*x + (1-smooth_opts.omega)*x0
