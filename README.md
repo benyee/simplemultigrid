@@ -14,6 +14,6 @@ some effort to code up your own interpolation matrix.)
 
 Some potential to-do's:
 * Implement a 2D/3D version.
-* Create a multi-equation version (i.e., multiple unknowns per spatial node)
+* Create a multi-equation (block) version (i.e., multiple unknowns per spatial node)
 * Make it easier to define custom restriction/interpolation operators
 * More complex boundary conditions
