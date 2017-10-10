@@ -24,6 +24,7 @@ def blk_jacobi(A, x, b, smooth_opts):
   else:
     num_color = 1
 
+  #Iterate backwards over the number of colors:
   color = num_color
   while(color > 1):
     color -= 1
@@ -44,5 +45,4 @@ def blk_jacobi(A, x, b, smooth_opts):
 
     x = x+tmpdiag.dot(b - A.dot(x))
 
-    color = color + 1
   return smooth_opts.omega*x + (1-smooth_opts.omega)*x0
