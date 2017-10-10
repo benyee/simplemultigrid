@@ -5,7 +5,7 @@ Future work will include converting this into a class.
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import spsolve
-import time
+
 max_dims = 5
 
 class MultigridLevel_Base(object):
