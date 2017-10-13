@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy.sparse as sp
-from .multigrid_base import MultigridLevel_Base
+from .multigrid_base import MultigridLevel_Base, BC
 from .smoothers import blk_jacobi
 
 class MultigridLevel_1D(MultigridLevel_Base):
@@ -31,6 +31,8 @@ class MultigridLevel_1D(MultigridLevel_Base):
           self.interpmat[i, i_coarse] = 0.5
         if i < nx_fine-1:
           self.interpmat[i, i_coarse+1] = 0.5
+        elif self.mg_opts.bcs[1] == BC.REFL:
+          self.interpmat[i, i_coarse] += 0.5
     if self.mg_opts.sparse:
       self.interpmat = sp.csr_matrix(self.interpmat)
 
