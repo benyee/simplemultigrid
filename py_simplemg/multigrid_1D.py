@@ -23,12 +23,14 @@ class MultigridLevel_1D(MultigridLevel_Base):
     else:
       self.interpmat = np.zeros((nx_fine, n_coarse))
     for i in range(nx_fine):
-      i_coarse = (i-1)//2
-      if i%2:
+      i_coarse = i//2
+      if not i%2:
         self.interpmat[i, i_coarse] = 1.0
       else:
-        self.interpmat[i, i_coarse] = 0.5
-        self.interpmat[i, i_coarse+1] = 0.5
+        if i > 0:
+          self.interpmat[i, i_coarse] = 0.5
+        if i < nx_fine-1:
+          self.interpmat[i, i_coarse+1] = 0.5
     if self.mg_opts.sparse:
       self.interpmat = sp.csr_matrix(self.interpmat)
 

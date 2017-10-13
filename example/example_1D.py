@@ -28,5 +28,6 @@ my_smooth_opts = SmootherOptions(smoothdown=1,
                                  smoothup=0,
                                  omega=1.0,
                                  num_color=2,
+                                 color_flip=False,
                                  sparse=True)
 print(solve_multigrid(A, b, x, my_mg_opts, my_smooth_opts))
