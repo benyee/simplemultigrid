@@ -6,7 +6,7 @@ import scipy.sparse as sp
 class SmootherOptions(object):
   """ A structure to store smoother options. """
   def __init__(self, smoothdown=1, smoothup=1, omega = 1.0, sparse = True,
-               num_color=True):
+               num_color=2):
     self.smoothdown = smoothdown
     self.smoothup   = smoothup
     self.num_color  = num_color
