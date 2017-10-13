@@ -6,12 +6,13 @@ import scipy.sparse as sp
 class SmootherOptions(object):
   """ A structure to store smoother options. """
   def __init__(self, smoothdown=1, smoothup=1, omega = 1.0, sparse = True,
-               num_color=2):
+               num_color=2, color_flip=False):
     self.smoothdown = smoothdown
     self.smoothup   = smoothup
     self.num_color  = num_color
     self.omega      = omega
     self.sparse     = sparse
+    self.color_flip = color_flip
 
 def blk_jacobi(A, x, b, smooth_opts):
   """ Performs one block Jacobi iteration.  Colored ordering can be toggled
@@ -25,10 +26,11 @@ def blk_jacobi(A, x, b, smooth_opts):
   else:
     diag = np.diag(A)
 
-  color = smooth_opts.num_color
-  while color:
-    color -= 1
+  color_order = range(smooth_opts.num_color)
+  if smooth_opts.color_flip:
+    color_order = reversed(color_order)
 
+  for color in color_order:
     diaginv = np.zeros(len(diag))
     diaginv[color::smooth_opts.num_color] = \
             1./diag[color::smooth_opts.num_color]

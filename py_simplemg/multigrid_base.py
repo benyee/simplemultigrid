@@ -88,7 +88,7 @@ class MultigridLevel_Base(object):
     raise NotImplementedError("generate_interp method not defined for base " + \
                               "abstract multigrid level class!")
 
-  def smooth(self, x, b, redblack=True):
+  def smooth(self, x, b, smooth_opts):
     """ Dummy smooth method for the base class."""
     raise NotImplementedError("smooth method not defined for " + \
                               "base abstract multigrid level class!")
