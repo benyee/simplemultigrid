@@ -3,7 +3,7 @@
 import sys
 sys.path.insert(0, '..')
 
-from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid
+from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid, BC
 import numpy as np
 
 nx = 2**9+1
@@ -16,6 +16,14 @@ for i in range(nx):
   if i < nx-1:
     A[i, i+1] = -1
 
+##Reflective boundary conditions:
+#A[0,0] = 2.01
+#A[0,1] = -2
+#A[-1,-1] = 2.01
+#A[-1,-2] = -2
+# Zero-flux dirichlet boundary conditions are present if you don't
+#  explicitly do anything to the matrix to account for b.c.'s
+
 x = np.zeros(nx)
 x[0:nx//2] = 0.5
 
@@ -23,6 +31,7 @@ my_mg_opts = MultigridOptions(num_it=1,
                               num_level=4,
                               cycle='W',
                               geom_type='1D',
+                              bcs=(BC.ZERO,BC.ZERO),
                               sparse=True)
 my_smooth_opts = SmootherOptions(smoothdown=1,
                                  smoothup=0,
