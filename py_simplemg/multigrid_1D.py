@@ -17,8 +17,8 @@ class MultigridLevel_1D(MultigridLevel_Base):
     nx_fine = self.A.shape[0]
     n_coarse = (nx_fine-1)//2+1
     if self.mg_opts.sparse:
-      """ Create matrix using lil_matrix, then convert to more 
-          computationally efficient csr_matrix. """
+      #Create matrix using lil_matrix, then convert to more
+      #  computationally efficient csr_matrix.
       self.interpmat = sp.lil_matrix((nx_fine, n_coarse))
     else:
       self.interpmat = np.zeros((nx_fine, n_coarse))
