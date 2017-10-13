@@ -7,7 +7,7 @@ import scipy.sparse as sp
 from scipy.sparse.linalg import spsolve
 from enum import Enum
 
-max_dims = 5
+MAX_DIMS = 5
 
 class MultigridLevel_Base(object):
   """ Each instance represents a level of the multigrid solver.
@@ -97,17 +97,17 @@ class MultigridLevel_Base(object):
   #End "abstract" methods
 
 class BC(Enum):
-  ZERO=0
-  REFL=1
+  ZERO = 0
+  REFL = 1
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
   def __init__(self, num_it=10,
-                     num_level=4,
-                     cycle='W',
-                     geom_type='1D',
-                     bcs=(BC.ZERO,BC.ZERO),
-                     sparse=False):
+               num_level=4,
+               cycle='W',
+               geom_type='1D',
+               bcs=(BC.ZERO, BC.ZERO),
+               sparse=False):
     """ Inputs:
 
     num_it -- number of iterations (V/W cycles)

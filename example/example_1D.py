@@ -17,10 +17,10 @@ for i in range(nx):
     A[i, i+1] = -1
 
 ##Reflective boundary conditions:
-#A[0,0] = 2.01
-#A[0,1] = -2
-#A[-1,-1] = 2.01
-#A[-1,-2] = -2
+#A[0, 0] = 2.01
+#A[0, 1] = -2
+#A[-1, -1] = 2.01
+#A[-1, -2] = -2
 # Zero-flux dirichlet boundary conditions are present if you don't
 #  explicitly do anything to the matrix to account for b.c.'s
 
@@ -31,7 +31,7 @@ my_mg_opts = MultigridOptions(num_it=1,
                               num_level=4,
                               cycle='W',
                               geom_type='1D',
-                              bcs=(BC.ZERO,BC.ZERO),
+                              bcs=(BC.ZERO, BC.ZERO),
                               sparse=True)
 my_smooth_opts = SmootherOptions(smoothdown=1,
                                  smoothup=0,
@@ -40,5 +40,5 @@ my_smooth_opts = SmootherOptions(smoothdown=1,
                                  color_flip=False,
                                  sparse=True)
 x = solve_multigrid(A, b, x, my_mg_opts, my_smooth_opts)
-print("Final L2 error = ", np.linalg.norm(x,2)/np.sqrt(len(x)))
+print("Final L2 error = ", np.linalg.norm(x, 2)/np.sqrt(len(x)))
 print("Final Linf error = ", max(x))
