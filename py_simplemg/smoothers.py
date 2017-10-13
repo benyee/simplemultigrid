@@ -13,6 +13,7 @@ class SmootherOptions(object):
     self.omega      = omega
     self.sparse     = sparse
     self.color_flip = color_flip
+    self.color_list = None
 
 def blk_jacobi(A, x, b, smooth_opts):
   """ Performs one block Jacobi iteration.  Colored ordering can be toggled
@@ -32,8 +33,12 @@ def blk_jacobi(A, x, b, smooth_opts):
 
   for color in color_order:
     diaginv = np.zeros(len(diag))
-    diaginv[color::smooth_opts.num_color] = \
-            1./diag[color::smooth_opts.num_color]
+    if smooth_opts.color_list != None:
+      diaginv[smooth_opts.color_list[color]] = \
+              1./diag[smooth_opts.color_list[color]]
+    else:
+      diaginv[color::smooth_opts.num_color] = \
+              1./diag[color::smooth_opts.num_color]
 
     if smooth_opts.sparse:
       diaginv = sp.diags(diaginv)
