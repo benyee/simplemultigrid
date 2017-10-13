@@ -5,6 +5,7 @@ Future work will include converting this into a class.
 import numpy as np
 import scipy.sparse as sp
 from scipy.sparse.linalg import spsolve
+from enum import Enum
 
 max_dims = 5
 
@@ -95,9 +96,18 @@ class MultigridLevel_Base(object):
     return x
   #End "abstract" methods
 
+class BC(Enum):
+  ZERO=0
+  REFL=1
+
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
-  def __init__(self, num_it=10, num_level=4, cycle='W', geom_type='1D', sparse=False):
+  def __init__(self, num_it=10,
+                     num_level=4,
+                     cycle='W',
+                     geom_type='1D',
+                     bcs=(BC.ZERO,BC.ZERO),
+                     sparse=False):
     """ Inputs:
 
     num_it -- number of iterations (V/W cycles)
@@ -106,9 +116,10 @@ class MultigridOptions(object):
     geom_type -- Type of geometry for the multigrid grids.  Currently only 1D
                  is available.
     """
-    self.num_it = num_it
+    self.num_it    = num_it
     self.num_level = num_level
-    self.sparse = sparse
+    self.sparse    = sparse
+    self.bcs       = bcs
     if cycle in ['W', 'V']:
       self.cycle = cycle
     else:
