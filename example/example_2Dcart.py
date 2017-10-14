@@ -24,10 +24,10 @@ for ix in range(nx):
     if ix < nx-1:
       A[i, right] = -1
     if iy > 0:
-      A[i, south] = -1
+      A[i, south] = -0.75
     if iy < ny-1:
-      A[i, north] = -1
-    A[i, i] = 4.01
+      A[i, north] = -0.75
+    A[i, i] = 3.7
 
 x = np.zeros(n)
 x[0:n//2] = 0.5
