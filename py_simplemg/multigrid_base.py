@@ -114,7 +114,7 @@ class MultigridOptions(object):
     num_level -- number of multigrid grids
     cycle -- type of cycle (V vs. W)
     geom_type -- Type of geometry for the multigrid grids.  Currently only 1D
-                 is available.
+                 and cart (general N-D Cartesian) are available.
     """
     self.num_it    = num_it
     self.num_level = num_level
@@ -124,7 +124,7 @@ class MultigridOptions(object):
       self.cycle = cycle
     else:
       raise ValueError("MultigridOptions cycle must be either V or W")
-    if geom_type in ['1D',]:
+    if geom_type in ['1D', 'cart']:
       self.geom_type = geom_type
     else:
-      raise ValueError("Only 1D supported so far!")
+      raise ValueError("Only 1D and cart supported so far!")

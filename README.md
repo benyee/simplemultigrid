@@ -1,6 +1,6 @@
 # Simple Multigrid Test Code
 
-A simple 1D multigrid solver in Python for testing out ideas quickly.
+A simple multigrid solver in Python for testing out ideas quickly.
 
 It should be fairly easy to adjust various aspects of the code.  Here are some
 suggestions of things that could be easily looked at with the current version
