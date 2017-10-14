@@ -1,4 +1,5 @@
-""" Sample 2D homogeneous problem with zero boundary conditions. """
+""" Sample 2D homogeneous problem with zero boundary conditions to test the 
+    tr-2D multigird level object. """
 
 import sys
 sys.path.insert(0, '..')
@@ -27,21 +28,21 @@ for ix in range(nx):
       A[i, south] = -1
     if iy < ny-1:
       A[i, north] = -1
-    A[i, i] = 4.01
+    A[i, i] = 4.0
 
 x = np.zeros(n)
 x[0:n//2] = 0.5
 
 my_mg_opts = MultigridOptions(num_it=1,
-                              num_level=4,
+                              num_level=2,
                               cycle='W',
-                              geom_type='cart',
+                              geom_type='tr-2D',
                               sparse=True)
 my_mg_opts.dims = [nx, ny]
 my_smooth_opts = SmootherOptions(smoothdown=1,
-                                 smoothup=0,
+                                 smoothup=1,
                                  num_color=2,
-                                 color_flip=False,
+                                 color_flip=True,
                                  sparse=True)
 x = solve_multigrid(A, b, x, my_mg_opts, my_smooth_opts)
 print("Final L2 error = ", np.linalg.norm(x, 2)/np.sqrt(len(x)))
