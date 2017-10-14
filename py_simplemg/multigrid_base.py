@@ -2,10 +2,10 @@
 Future work will include converting this into a class.
 """
 
-import numpy as np
+from enum import Enum
 import scipy.sparse as sp
 from scipy.sparse.linalg import spsolve
-from enum import Enum
+import numpy as np
 
 MAX_DIMS = 5
 
@@ -64,8 +64,7 @@ class MultigridLevel_Base(object):
     if self.level == 0:
       if self.mg_opts.sparse:
         return spsolve(self.A, b)
-      else:
-        return np.linalg.solve(self.A, b)
+      return np.linalg.solve(self.A, b)
     for i in range(smooth_opts.smoothdown):
       x = self.smooth(x, b, smooth_opts)
     r = self.restrict(self.residual(x, b))
@@ -97,6 +96,7 @@ class MultigridLevel_Base(object):
   #End "abstract" methods
 
 class BC(Enum):
+  """ Enumeration for boundary conditions. """
   ZERO = 0
   REFL = 1
 
