@@ -40,9 +40,9 @@ my_mg_opts = MultigridOptions(num_it=1,
                               sparse=True)
 my_mg_opts.dims = [nx, ny]
 my_smooth_opts = SmootherOptions(smoothdown=1,
-                                 smoothup=1,
+                                 smoothup=0,
                                  num_color=2,
-                                 color_flip=True,
+                                 color_flip=False,
                                  sparse=True)
 x = solve_multigrid(A, b, x, my_mg_opts, my_smooth_opts)
 print("Final L2 error = ", np.linalg.norm(x, 2)/np.sqrt(len(x)))
