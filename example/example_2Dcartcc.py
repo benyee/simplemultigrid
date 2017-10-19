@@ -36,7 +36,7 @@ x[1::2] = 1.0
 my_mg_opts = MultigridOptions(num_it=1,
                               num_level=2,
                               cycle='V',
-                              geom_type='cccart',
+                              mg_type=MultigridType.MG_ccCart,
                               sparse=True)
 my_mg_opts.dims = [nx, ny]
 my_smooth_opts = SmootherOptions(smoothdown=1,

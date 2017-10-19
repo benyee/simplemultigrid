@@ -100,12 +100,19 @@ class BC(Enum):
   ZERO = 0
   REFL = 1
 
+class MultigridType(Enum):
+  """ Enumeration for multigrid type. """
+  MG_1D = 0
+  MG_Cart = 1
+  MG_cc1D = 2
+  MG_ccCart = 3
+
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
   def __init__(self, num_it=10,
                num_level=4,
                cycle='W',
-               geom_type='1D',
+               mg_type=MultigridType.MG_1D,
                bcs=(BC.ZERO, BC.ZERO),
                sparse=False):
     """ Inputs:
@@ -113,8 +120,8 @@ class MultigridOptions(object):
     num_it -- number of iterations (V/W cycles)
     num_level -- number of multigrid grids
     cycle -- type of cycle (V vs. W)
-    geom_type -- Type of geometry for the multigrid grids.  Currently only 1D
-                 and cart (general N-D Cartesian) are available.
+    mg_type -- Type of geometry for the multigrid grids.  Currently only 1D
+               and cart (general N-D Cartesian) are available.
     """
     self.num_it    = num_it
     self.num_level = num_level
@@ -124,7 +131,7 @@ class MultigridOptions(object):
       self.cycle = cycle
     else:
       raise ValueError("MultigridOptions cycle must be either V or W")
-    if geom_type in ['1D', 'cart', 'cc1D', 'cccart']:
-      self.geom_type = geom_type
+    if type(mg_type) == MultigridType:
+      self.mg_type = mg_type
     else:
-      raise ValueError("Only 1D, cc1D, cart, and cccart supported so far!")
+      raise ValueError("Invalid multigrid type!")
