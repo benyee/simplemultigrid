@@ -5,7 +5,8 @@
 import sys
 sys.path.insert(0, '..')
 
-from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid, BC
+from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid, \
+                        BC, MultigridType
 import numpy as np
 
 nx = 2**9
@@ -32,7 +33,7 @@ x[0:nx//2] = 0.5
 my_mg_opts = MultigridOptions(num_it=10,
                               num_level=2,
                               cycle='W',
-                              geom_type='cc1D',
+                              mg_type=MultigridType.MG_cc1D,
                               bcs=(BC.ZERO, BC.ZERO),
                               sparse=True)
 my_smooth_opts = SmootherOptions(smoothdown=1,

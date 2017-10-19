@@ -3,7 +3,8 @@
 import sys
 sys.path.insert(0, '..')
 
-from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid
+from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid, \
+                        MultigridType
 import numpy as np
 
 nx = 2**4+1
@@ -43,7 +44,7 @@ x[0:n//2] = 0.5
 my_mg_opts = MultigridOptions(num_it=1,
                               num_level=4,
                               cycle='W',
-                              geom_type='cart',
+                              mg_type=MultigridType.MG_Cart,
                               sparse=True)
 my_mg_opts.dims = [nx, ny, nz]
 my_smooth_opts = SmootherOptions(smoothdown=1,
