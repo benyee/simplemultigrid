@@ -4,6 +4,7 @@ Future work will include converting this into a class.
 
 from .multigrid_1D import MultigridLevel_1D
 from .multigrid_cart import MultigridLevel_Cartesian
+from .multigrid_ar import MultigridLevel_AR
 from .multigrid_base import MultigridType
 
 def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
@@ -34,9 +35,9 @@ def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
   elif mg_opts.mg_type == MultigridType.MG_ccCart:
     mymgsolver = MultigridLevel_ccCartesian(mg_opts.num_level-1, A, mg_opts)
   elif mg_opts.mg_type == MultigridType.MG_AR:
-    mymgsolver = MultigridLevel_ar(mg_opts.num_level-1, A, mg_opts)
+    mymgsolver = MultigridLevel_AR(mg_opts.num_level-1, A, mg_opts)
   else:
-    raise ValueError("Only 1D and N-dimensional Cartesian are"+\
+    raise ValueError("Only 1D, N-dimensional Cartesian, and 'AR' are"+\
                     " supported currently.")
 
   for iteration in range(mg_opts.num_it):
