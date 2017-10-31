@@ -106,6 +106,7 @@ class MultigridType(Enum):
   MG_Cart = 1
   MG_cc1D = 2
   MG_ccCart = 3
+  MG_AR = 4
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
@@ -120,8 +121,10 @@ class MultigridOptions(object):
     num_it -- number of iterations (V/W cycles)
     num_level -- number of multigrid grids
     cycle -- type of cycle (V vs. W)
-    mg_type -- Type of geometry for the multigrid grids.  Currently only 1D
-               and cart (general N-D Cartesian) are available.
+    mg_type -- Type of geometry and interpolation schemes for the multigrid
+               grids.  Currently only 1D, cart (general N-D Cartesian), and
+               "ar" (similar to cart but collapses 1 dimension at a time)
+               are available.
     """
     self.num_it    = num_it
     self.num_level = num_level
