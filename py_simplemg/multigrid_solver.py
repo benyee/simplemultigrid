@@ -5,6 +5,7 @@ Future work will include converting this into a class.
 from .multigrid_1D import MultigridLevel_1D
 from .multigrid_cart import MultigridLevel_Cartesian
 from .multigrid_cc1D import MultigridLevel_cc1D
+from .multigrid_cccart import MultigridLevel_ccCartesian
 
 def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
   """ Wrapper function to solve a linear system using multigrid.
@@ -31,8 +32,10 @@ def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
     mymgsolver = MultigridLevel_Cartesian(mg_opts.num_level-1, A, mg_opts)
   elif mg_opts.geom_type == 'cc1D':
     mymgsolver = MultigridLevel_cc1D(mg_opts.num_level-1, A, mg_opts)
+  elif mg_opts.geom_type == 'cccart':
+    mymgsolver = MultigridLevel_ccCartesian(mg_opts.num_level-1, A, mg_opts)
   else:
-    raise ValueError("Only 1D, cc1D, and general N-dimensional Cartesian are"+\
+    raise ValueError("Only 1D and general N-dimensional Cartesian are"+\
                     " supported currently.")
 
   for iteration in range(mg_opts.num_it):
