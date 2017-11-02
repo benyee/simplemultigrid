@@ -71,7 +71,7 @@ class MultigridLevel_Base(object):
     xc = np.zeros(len(r))
     x = x+self.interp(self.child.iterate(xc, r, smooth_opts))
     #begin W-cycle
-    if self.mg_opts.cycle == 'W':
+    if self.mg_opts.cycle == 'W' and self.parent != None:
       for i in range(smooth_opts.smoothdown):
         x = self.smooth(x, b, smooth_opts)
       r = self.restrict(self.residual(x, b))
