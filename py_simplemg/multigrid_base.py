@@ -124,7 +124,7 @@ class MultigridOptions(object):
       self.cycle = cycle
     else:
       raise ValueError("MultigridOptions cycle must be either V or W")
-    if geom_type in ['1D', 'cart', 'cc1D']:
+    if geom_type in ['1D', 'cart', 'cc1D', 'cccart']:
       self.geom_type = geom_type
     else:
-      raise ValueError("Only 1D, cc1D, and cart supported so far!")
+      raise ValueError("Only 1D, cc1D, cart, and cccart supported so far!")
