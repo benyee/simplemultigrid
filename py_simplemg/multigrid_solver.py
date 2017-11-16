@@ -5,6 +5,8 @@ Future work will include converting this into a class.
 from .multigrid_1D import MultigridLevel_1D
 from .multigrid_cart import MultigridLevel_Cartesian
 from .multigrid_ar import MultigridLevel_AR
+from .multigrid_cc1D import MultigridLevel_cc1D
+from .multigrid_cccart import MultigridLevel_ccCartesian
 from .multigrid_base import MultigridType
 
 def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
