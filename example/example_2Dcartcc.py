@@ -3,7 +3,8 @@
 import sys
 sys.path.insert(0, '..')
 
-from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid
+from py_simplemg import MultigridOptions, SmootherOptions, solve_multigrid, \
+                        BC, MultigridType
 import numpy as np
 
 nx = 2**5+1
