@@ -4,6 +4,7 @@ Future work will include converting this into a class.
 
 from .multigrid_1D import MultigridLevel_1D
 from .multigrid_cart import MultigridLevel_Cartesian
+from .multigrid_cart_fixz import MultigridLevel_Cartesian_FixZ
 from .multigrid_ar import MultigridLevel_AR
 from .multigrid_cc1D import MultigridLevel_cc1D
 from .multigrid_cccart import MultigridLevel_ccCartesian
@@ -32,6 +33,8 @@ def solve_multigrid(A, b, x0, mg_opts, smooth_opts):
     mymgsolver = MultigridLevel_1D(mg_opts.num_level-1, A, mg_opts)
   elif mg_opts.mg_type == MultigridType.MG_Cart:
     mymgsolver = MultigridLevel_Cartesian(mg_opts.num_level-1, A, mg_opts)
+  elif mg_opts.mg_type == MultigridType.MG_Cart_FixZ:
+    mymgsolver = MultigridLevel_Cartesian_FixZ(mg_opts.num_level-1, A, mg_opts)
   elif mg_opts.mg_type == MultigridType.MG_cc1D:
     mymgsolver = MultigridLevel_cc1D(mg_opts.num_level-1, A, mg_opts)
   elif mg_opts.mg_type == MultigridType.MG_ccCart:

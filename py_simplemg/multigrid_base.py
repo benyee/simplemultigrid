@@ -107,6 +107,7 @@ class MultigridType(Enum):
   MG_cc1D = 2
   MG_ccCart = 3
   MG_AR = 4
+  MG_Cart_FixZ = 5
 
 class MultigridOptions(object):
   """ A structure to store multigrid solver options. """
